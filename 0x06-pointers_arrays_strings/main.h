@@ -1,5 +1,5 @@
 #ifndef MAIN_H
-#define MAIN.H
+#define MAIN_H
 
 int _putchar(char c);
 char *_strcat(char *dest, char *src);
@@ -9,7 +9,7 @@ int _strcmp(char *s1, char *s2);
 char *string_toupper(char *a);
 char *cap_string(char *a);
 void reverse_array(int *a, int n);
-char *infinite_add(char n*1, char *n2, char *r, int size_r);
+char *infinite_add(char *n1, char *n2, char *r, int size_r);
 char *leet(char *a);
 void print_number(int n);
 char *rot13(char *a);
