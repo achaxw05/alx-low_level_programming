@@ -1,39 +1,53 @@
-#include "lists.h"
+#include "hash_tables.h"
 
 /**
- * add_dnodeint_end - adds a new node at the end
- * of a dlistint_t list
+ * hash_table_set - Add an item to Hash table.
+ * @ht: A pointer to the hash table.
+ * @key: The key of the added item to the hash table.
+ * @value: The pair value of the key.
  *
- * @head: head of the list
- * @n: value of the element
- * Return: the address of the new element
+ * Return: Upon failure - 0.
+ *         else - 1.
  */
-dlistint_t *add_dnodeint_end(dlistint_t **head, const int n)
+int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 {
-	dlistint_t *h;
-	dlistint_t *new;
+	hash_node_t *new;
+	char *value_copy;
+	unsigned long int index, i;
 
-	new = malloc(sizeof(dlistint_t));
+	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
+		return (0);
+
+	value_copy = strdup(value);
+	if (value_copy == NULL)
+		return (0);
+
+	index = key_index((const unsigned char *)key, ht->size);
+	for (i = index; ht->array[i]; i++)
+	{
+		if (strcmp(ht->array[i]->key, key) == 0)
+		{
+			free(ht->array[i]->value);
+			ht->array[i]->value = value_copy;
+			return (1);
+		}
+	}
+
+	new = malloc(sizeof(hash_node_t));
 	if (new == NULL)
-		return (NULL);
-
-	new->n = n;
-	new->next = NULL;
-
-	h = *head;
-
-	if (h != NULL)
 	{
-		while (h->next != NULL)
-			h = h->next;
-		h->next = new;
+		free(value_copy);
+		return (0);
 	}
-	else
+	new->key = strdup(key);
+	if (new->key == NULL)
 	{
-		*head = new;
+		free(new);
+		return (0);
 	}
+	new->value = value_copy;
+	new->next = ht->array[index];
+	ht->array[index] = new;
 
-	new->prev = h;
-
-	return (new);
+	return (1);
 }
